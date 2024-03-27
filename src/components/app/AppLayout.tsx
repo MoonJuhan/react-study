@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import AppHeader from './AppHeader'
 
@@ -5,7 +6,9 @@ const AppLayout = () => {
   return (
     <>
       <AppHeader />
-      <Outlet />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Outlet />
+      </Suspense>
     </>
   )
 }
