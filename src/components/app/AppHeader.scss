@@ -1,0 +1,16 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+
+  .app-header-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .links-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
