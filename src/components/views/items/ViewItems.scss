@@ -1,0 +1,19 @@
+.view-items {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 16px;
+
+  .page-title {
+    margin-bottom: 20px;
+  }
+
+  .item-total-info {
+    margin-bottom: 16px;
+  }
+
+  .item-card-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+}
