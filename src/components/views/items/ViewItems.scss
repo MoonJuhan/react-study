@@ -7,13 +7,25 @@
     margin-bottom: 20px;
   }
 
-  .item-total-info {
+  .item-total-info,
+  .item-total-info-skeleton {
     margin-bottom: 16px;
+  }
+
+  .item-total-info-skeleton {
+    width: 60px;
+    height: 20px;
   }
 
   .item-card-wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 8px;
+
+    .item-card-skeleton {
+      border-radius: 8px;
+      width: 100%;
+      height: 340px;
+    }
   }
 }

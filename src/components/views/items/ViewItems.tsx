@@ -1,37 +1,49 @@
-import { useEffect } from 'react'
+import { Suspense } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import axios from '@/modules/dummyAxios.ts'
 import ItemCard from '@/components/common/items/ItemCard.tsx'
+import AppSkeleton from '@/components/app/AppSkeleton'
 import './ViewItems.scss'
 
-const ViewItems = () => {
-  useEffect(() => {
-    console.log('Mounted')
-
-    return () => {
-      console.log('Unmounted')
-    }
-  }, [])
-
-  const itemInfo = {
-    items: [
-      { id: 1, name: 'Item 1', description: 'Description 1', price: 10 },
-      { id: 2, name: 'Item 2', description: 'Description 2', price: 20 },
-      { id: 3, name: 'Item 3', description: 'Description 3', price: 8.4 },
-      { id: 4, name: 'Item 4', description: 'Description 4', price: 10.2 },
-    ],
-    total: 10,
-    page: 1,
-    perPage: 4,
-  }
+const PageContents = () => {
+  const { data: itemInfo } = useSuspenseQuery({
+    queryKey: ['items'],
+    queryFn: async () => await axios.get({ url: '/api/items' }),
+  })
 
   return (
-    <div className="view-items">
-      <h1 className="page-title">Items Page</h1>
-      <div className="item-total-info">Total: {itemInfo.total}</div>
+    <>
+      <div className="item-total-info">Total: {itemInfo?.total as number}</div>
+
       <div className="item-card-wrapper">
-        {itemInfo.items.map((item) => (
+        {(itemInfo?.items || []).map((item) => (
           <ItemCard key={item.id} item={item} />
         ))}
       </div>
+    </>
+  )
+}
+
+const PageSkeletonContents = () => (
+  <>
+    <AppSkeleton className="item-total-info-skeleton" />
+
+    <div className="item-card-wrapper">
+      {[1, 2, 3, 4].map((i) => (
+        <AppSkeleton className="item-card-skeleton" key={i} />
+      ))}
+    </div>
+  </>
+)
+
+const ViewItems = () => {
+  return (
+    <div className="view-items">
+      <h1 className="page-title">Items Page</h1>
+
+      <Suspense fallback={<PageSkeletonContents />}>
+        <PageContents />
+      </Suspense>
     </div>
   )
 }
