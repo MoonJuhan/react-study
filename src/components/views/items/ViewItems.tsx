@@ -16,7 +16,7 @@ const useItems = (page: number) =>
 const PageContents = () => {
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
-  const page = Number(searchParams.get('page'))
+  const page = Number(searchParams.get('page')) || 1
 
   const navigate = useNavigate()
   const setPage = (newPage: number) => {
