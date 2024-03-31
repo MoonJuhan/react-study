@@ -1,15 +1,29 @@
 import { Suspense } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import axios from '@/modules/dummyAxios.ts'
+import { useLocation, useNavigate } from 'react-router-dom'
+import dummyAxios from '@/modules/dummyAxios.ts'
 import ItemCard from '@/components/common/items/ItemCard.tsx'
 import AppSkeleton from '@/components/app/AppSkeleton'
+import AppPagnation from '@/components/app/AppPagination'
 import './ViewItems.scss'
 
-const PageContents = () => {
-  const { data: itemInfo } = useSuspenseQuery({
-    queryKey: ['items'],
-    queryFn: async () => await axios.get({ url: '/api/items' }),
+const useItems = (page: number) =>
+  useSuspenseQuery({
+    queryKey: ['items', page],
+    queryFn: async () => await dummyAxios.get({ url: '/api/items', query: { page } }),
   })
+
+const PageContents = () => {
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const page = Number(searchParams.get('page'))
+
+  const navigate = useNavigate()
+  const setPage = (newPage: number) => {
+    navigate(`/?page=${newPage}`)
+  }
+
+  const { data: itemInfo } = useItems(page)
 
   return (
     <>
@@ -20,6 +34,12 @@ const PageContents = () => {
           <ItemCard key={item.id} item={item} />
         ))}
       </div>
+
+      <AppPagnation
+        currentPage={page}
+        lastPage={Math.ceil(itemInfo?.total / itemInfo?.perPage)}
+        onClickPage={setPage}
+      />
     </>
   )
 }
@@ -33,6 +53,8 @@ const PageSkeletonContents = () => (
         <AppSkeleton className="item-card-skeleton" key={i} />
       ))}
     </div>
+
+    <AppSkeleton className="pagination-skeleton" />
   </>
 )
 

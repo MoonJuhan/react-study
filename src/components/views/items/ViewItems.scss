@@ -17,10 +17,17 @@
     height: 20px;
   }
 
+  .pagination-skeleton {
+    margin: 0 auto;
+    width: 128px;
+    height: 40px;
+  }
+
   .item-card-wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 8px;
+    margin-bottom: 16px;
 
     .item-card-skeleton {
       border-radius: 8px;
