@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useSuspenseQuery, useQuery } from '@tanstack/react-query'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Item } from '@/interfaces'
 import dummyAxios from '@/modules/dummyAxios.ts'
@@ -26,13 +26,38 @@ const PageContents = () => {
 
   const { data: itemInfo } = useItems(page)
 
+  const itemIds = itemInfo.items.map((item: Item) => item.id).join(',')
+
+  const {
+    isLoading,
+    data: isCartItems,
+    refetch: refetchIsCartItems,
+  } = useQuery({
+    queryKey: ['isCartItem', itemIds],
+    queryFn: async () => await dummyAxios.get({ url: '/api/is_cart_item', query: { itemIds } }),
+    enabled: !!itemInfo,
+  })
+
+  const getIsCartItemType = (index: number) => {
+    if (isLoading) return 'loading'
+
+    if ((isCartItems as { [key: number]: boolean })[index]) return 'true'
+
+    return 'false'
+  }
+
   return (
     <>
       <div className="item-total-info">Total: {itemInfo?.total as number}</div>
 
       <div className="item-card-wrapper">
-          <ItemCard key={item.id} item={item} />
         {(itemInfo?.items || []).map((item: Item, index: number) => (
+          <ItemCard
+            key={item.id}
+            item={item}
+            isCartItemType={getIsCartItemType(index)}
+            refetchIsCartItems={refetchIsCartItems}
+          />
         ))}
       </div>
 
