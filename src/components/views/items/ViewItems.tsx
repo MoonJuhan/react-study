@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Item } from '@/interfaces'
 import dummyAxios from '@/modules/dummyAxios.ts'
 import ItemCard from '@/components/common/items/ItemCard.tsx'
 import AppSkeleton from '@/components/app/AppSkeleton'
@@ -30,8 +31,8 @@ const PageContents = () => {
       <div className="item-total-info">Total: {itemInfo?.total as number}</div>
 
       <div className="item-card-wrapper">
-        {(itemInfo?.items || []).map((item) => (
           <ItemCard key={item.id} item={item} />
+        {(itemInfo?.items || []).map((item: Item, index: number) => (
         ))}
       </div>
 

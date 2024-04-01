@@ -1,11 +1,6 @@
+import { Item } from '@/interfaces'
 import './ItemCard.scss'
 
-interface Item {
-  id: number
-  name: string
-  description: string
-  price: number
-}
 
 const ItemCard = ({ item }: { item: Item }) => {
   const added = true
