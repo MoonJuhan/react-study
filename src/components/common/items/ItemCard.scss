@@ -24,6 +24,10 @@
     &:active {
       background-color: rgba(0, 0, 0, 0.6);
     }
+
+    &:disabled {
+      pointer-events: none;
+    }
   }
 
   .item-card-image-wrapper {

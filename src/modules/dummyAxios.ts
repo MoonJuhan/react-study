@@ -32,13 +32,52 @@ const getIsCartItem = (query: object | undefined) => {
   return itemIds.split(',').map((id) => localCarts.some((item: { id: number }) => item.id === Number(id)))
 }
 
+const getCarts = async () => {
+  const localCarts = JSON.parse(window.localStorage.getItem('carts') || '[]')
+
+  return {
+    cartItems: localCarts,
+    total: localCarts.length,
+  }
+}
+
+const setCart = async (data: object | undefined) => {
+  const { id, added } = data as { id: number; added: boolean }
+
+  const localCarts = JSON.parse(window.localStorage.getItem('carts') || '[]')
+
+  if (added) {
+    localCarts.push(items.find((item) => item.id === id))
+  } else {
+    const index = localCarts.findIndex((item: { id: number }) => item.id === id)
+    localCarts.splice(index, 1)
+  }
+
+  window.localStorage.setItem('carts', JSON.stringify(localCarts))
+
+  return {}
+}
+
 const axios = {
   get: async ({ url, query }: { url: string; query?: object }) => {
+    console.log('get', url, query)
     await sleep(3000)
 
     if (url === '/api/items') return getItems(query)
 
     if (url === '/api/is_cart_item') return getIsCartItem(query)
+
+    if (url === '/api/cart') return getCarts()
+
+    console.log(url)
+
+    return {}
+  },
+  post: async ({ url, data }: { url: string; data: object }) => {
+    console.log('post', url, data)
+    await sleep(1000)
+
+    if (url === '/api/cart') return setCart(data)
 
     console.log(url)
 
